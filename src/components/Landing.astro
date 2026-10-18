@@ -1,0 +1,592 @@
+---
+import "../styles/landing.css";
+import { locales, strings, type Locale } from "../i18n/landing";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = strings[lang];
+const home = locales[lang].path;
+
+const REPO = "https://github.com/HexoLauncher/HexoLauncher";
+const RELEASES = `${REPO}/releases/latest`;
+const DOCS = "/guides/example/";
+const VERSION = "0.1.0";
+
+const MODEL = "/models/sample.glb";
+
+const tags = [
+  ["Modrinth", "CurseForge"],
+  ["Modrinth", "CurseForge"],
+  ["Prism Launcher", "PolyMC", "MultiMC"],
+];
+const features = t.features.map((f, i) => ({
+  ...f,
+  tags: tags[i],
+  img: "/sample.png",
+}));
+const extras = t.extras;
+
+const bodyFont = lang === "zh-cn" ? "Noto+Sans+SC" : "Noto+Sans+TC";
+// hreflang 需要絕對網址，等 astro.config 設好 site 才輸出
+const site = Astro.site;
+
+const pad = (n: number) => String(n).padStart(2, "0");
+---
+
+<html lang={locales[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nolauncher</title>
+    <meta name="description" content={t.description} />
+    <script is:inline define:vars={{ current: lang }}>
+      // 沒手動選過語言就依瀏覽器語言導向；選過就照選的
+      (() => {
+        const paths = { "zh-tw": "/", "zh-cn": "/zh-cn/", en: "/en/" };
+        let want = null;
+        try {
+          want = localStorage.getItem("lang");
+        } catch {}
+        if (!paths[want]) {
+          for (const l of navigator.languages || [navigator.language]) {
+            const v = l.toLowerCase();
+            if (!v.startsWith("zh")) {
+              if (v.startsWith("en")) want = "en";
+              if (want) break;
+              continue;
+            }
+            want = /hans|cn|sg|my/.test(v) ? "zh-cn" : "zh-tw";
+            break;
+          }
+          want = want || "en";
+        }
+        if (want !== current) location.replace(paths[want] + location.hash);
+      })();
+    </script>
+    {
+      site &&
+        [...Object.values(locales), { htmlLang: "x-default", path: "/" }].map(
+          (l) => (
+            <link
+              rel="alternate"
+              hreflang={l.htmlLang}
+              href={new URL(l.path, site).href}
+            />
+          ),
+        )
+    }
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="preload" href={MODEL} as="fetch" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href={`https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=${bodyFont}:wght@400;500;700;900&display=swap`}
+      rel="stylesheet"
+    />
+  </head>
+  <body class="is-loading">
+    <div class="loader" aria-hidden="true">
+      <span class="loader-name">Nolauncher</span>
+      <span class="loader-count"><span class="loader-num">0</span>%</span>
+      <span class="loader-bar"></span>
+    </div>
+
+    <header class="nav">
+      <a class="brand" href={home}>
+        <img src="/logo.svg" alt="" width="24" height="24" />
+        <span>Nolauncher</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">{t.nav.features}</a>
+        <a href="#blueprints">{t.nav.blueprints}</a>
+        <a href={DOCS}>{t.nav.docs}</a>
+      </nav>
+      <div class="nav-end">
+        <nav class="lang-switch" aria-label={t.language}>
+          {
+            (Object.entries(locales) as [Locale, (typeof locales)[Locale]][]).map(
+              ([key, l]) => (
+                <a
+                  href={l.path}
+                  hreflang={l.htmlLang}
+                  lang={l.htmlLang}
+                  data-lang={key}
+                  aria-current={key === lang ? "page" : undefined}
+                >
+                  {l.label}
+                </a>
+              ),
+            )
+          }
+        </nav>
+        <a
+          class="btn btn-sm magnetic"
+          href={RELEASES}
+          target="_blank"
+          rel="noopener"><span>{t.download}</span></a
+        >
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="stage" data-model={MODEL}></div>
+
+        <div class="hero-inner">
+          <div class="hero-top">
+            <p class="hero-sub">{t.description}</p>
+            <div class="hero-cta">
+              <a
+                class="btn btn-primary magnetic"
+                href={RELEASES}
+                target="_blank"
+                rel="noopener"><span>{t.download} {VERSION}</span></a
+              >
+              <a class="btn magnetic" href={REPO} target="_blank" rel="noopener"
+                ><span>GitHub</span></a
+              >
+            </div>
+          </div>
+
+          <h1 class="hero-title" aria-label="Nolauncher">
+            <span class="hero-word">NOLAUNCHER</span>
+          </h1>
+        </div>
+      </section>
+
+      <section class="shot">
+        <div class="shot-frame">
+          <img src="/sample.png" alt={t.shotAlt} width="1600" height="1000" />
+        </div>
+      </section>
+
+      <section id="features" class="features">
+        <div class="features-media">
+          {
+            features.map((f, i) => (
+              <div class="media-item" data-i={i}>
+                <img
+                  src={f.img}
+                  alt={f.title}
+                  width="1600"
+                  height="1000"
+                  loading="lazy"
+                />
+              </div>
+            ))
+          }
+          <span class="media-index"
+            ><b class="media-cur">01</b> / {pad(features.length)}</span
+          >
+        </div>
+        <div class="features-list">
+          {
+            features.map((f, i) => (
+              <article class="feature" data-i={i}>
+                <span class="feature-num">{pad(i + 1)}</span>
+                <h2>{f.title}</h2>
+                <p>{f.body}</p>
+                <ul class="tags">
+                  {f.tags.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+                <img
+                  class="feature-inline"
+                  src={f.img}
+                  alt={f.title}
+                  width="1600"
+                  height="1000"
+                  loading="lazy"
+                />
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="section more">
+        <h2 class="section-title">{t.moreTitle}</h2>
+        <ul class="more-list">
+          {
+            extras.map((e) => (
+              <li class="more-row">
+                <h3>{e.title}</h3>
+                <p>{e.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section id="blueprints" class="section blueprint">
+        <h2 class="section-title">{t.blueprintTitle}</h2>
+        <div class="blueprint-body">
+          <p class="blueprint-lead">{t.blueprintLead}</p>
+          <div class="blueprint-shot fade-up">
+            <img
+              src="/sample.png"
+              alt={t.blueprintTitle}
+              width="1600"
+              height="1000"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-cta">
+        <p>NoLauncher {VERSION}</p>
+        <div class="hero-cta">
+          <a
+            class="btn btn-primary btn-lg magnetic"
+            href={RELEASES}
+            target="_blank"
+            rel="noopener"><span>{t.releases}</span></a
+          >
+          <a class="btn btn-lg magnetic" href={DOCS}><span>{t.readDocs}</span></a>
+        </div>
+      </div>
+      <div class="footer-word" aria-hidden="true">NOLAUNCHER</div>
+      <div class="footer-meta">
+        <span>MIT License</span>
+        <a href={REPO} target="_blank" rel="noopener">GitHub</a>
+        <span>{t.notOfficial}</span>
+      </div>
+    </footer>
+
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      import { SplitText } from "gsap/SplitText";
+      import Lenis from "lenis";
+      import { mountBuild, type BuildScene } from "../scripts/model-viewer";
+
+      gsap.registerPlugin(ScrollTrigger, SplitText);
+
+      document.querySelectorAll<HTMLElement>("[data-lang]").forEach((a) =>
+        a.addEventListener("click", () => {
+          try {
+            localStorage.setItem("lang", a.dataset.lang!);
+          } catch {}
+        }),
+      );
+
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const wide = () => window.innerWidth >= 900;
+      const $ = <T extends Element = HTMLElement>(s: string) =>
+        document.querySelector<T>(s)!;
+
+      const fitWords = () => {
+        document
+          .querySelectorAll<HTMLElement>(".hero-word, .footer-word")
+          .forEach((el) => {
+            el.style.fontSize = "100px";
+            const box = el.parentElement!;
+            const cs = getComputedStyle(box);
+            const target =
+              box.clientWidth -
+              parseFloat(cs.paddingLeft) -
+              parseFloat(cs.paddingRight);
+            el.style.fontSize = `${(100 * target) / el.scrollWidth}px`;
+          });
+      };
+      document.fonts.ready.then(fitWords);
+      window.addEventListener("resize", fitWords);
+
+      let lenis: Lenis | null = null;
+      if (!reduce) {
+        lenis = new Lenis({ anchors: true, lerp: 0.09 });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((t) => lenis!.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+        lenis.stop();
+      }
+
+      const stage = $(".stage");
+      const count = { v: 0 };
+      const num = $(".loader-num");
+      const showCount = () => {
+        num.textContent = String(Math.round(count.v));
+        gsap.set(".loader-bar", { scaleX: count.v / 100 });
+      };
+      const sceneP = mountBuild(stage, stage.dataset.model!, (p) => {
+        gsap.to(count, {
+          v: Math.max(count.v, p * 90),
+          duration: 0.4,
+          onUpdate: showCount,
+          overwrite: true,
+        });
+      }).catch((err) => {
+        console.error(err);
+        return null;
+      });
+
+      Promise.all([
+        sceneP,
+        document.fonts.ready,
+        new Promise((r) => setTimeout(r, reduce ? 0 : 900)),
+      ]).then(([scene]) => {
+        gsap.to(count, {
+          v: 100,
+          duration: reduce ? 0 : 0.5,
+          ease: "power2.out",
+          onUpdate: showCount,
+          onComplete: () => start(scene),
+        });
+      });
+
+      function start(scene: BuildScene | null) {
+        document.body.classList.remove("is-loading");
+        if (reduce) {
+          scene?.setCount(scene.blocks, true);
+          gsap.set(".loader", { display: "none" });
+          return;
+        }
+
+        const intro = gsap.timeline({ defaults: { ease: "expo.inOut" } });
+        intro
+          .to(".loader-name, .loader-count", {
+            yPercent: -120,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power3.in",
+          })
+          .to(
+            ".loader",
+            { clipPath: "inset(0 0 100% 0)", duration: 1 },
+            "-=0.1",
+          )
+          .set(".loader", { display: "none" });
+
+        const word = SplitText.create(".hero-word", {
+          type: "chars",
+          mask: "chars",
+        });
+        intro.from(
+          word.chars,
+          { yPercent: 110, duration: 1.1, stagger: 0.035, ease: "expo.out" },
+          "-=0.55",
+        );
+
+        if (scene) buildOnScroll(scene, intro);
+        intro.add(() => lenis?.start(), "-=0.6");
+
+        setupScroll();
+      }
+
+      function buildOnScroll(scene: BuildScene, intro: gsap.core.Timeline) {
+        const state = { scroll: 0 };
+        const apply = () => scene.setCount(state.scroll * scene.blocks);
+        scene.setShift(wide() ? 0.14 : 0);
+        window.addEventListener("resize", () =>
+          scene.setShift(wide() ? 0.14 : 0),
+        );
+
+        const cam = scene.camera.position.clone();
+        intro.from(
+          scene.camera.position,
+          {
+            x: cam.x * 1.6,
+            y: cam.y * 2.2,
+            z: cam.z * 1.6,
+            duration: 2.4,
+            ease: "expo.out",
+          },
+          "-=1.2",
+        );
+
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: ".hero",
+              start: "top top",
+              end: "+=220%",
+              pin: true,
+              scrub: 0.8,
+              invalidateOnRefresh: true,
+            },
+          })
+          .to(
+            state,
+            { scroll: 1, ease: "none", duration: 1, onUpdate: apply },
+            0,
+          )
+          .to(
+            ".hero-top",
+            { y: -60, opacity: 0, ease: "power1.in", duration: 0.35 },
+            0.05,
+          )
+          .to(
+            ".hero-title",
+            { y: () => sinkHalf(), ease: "power1.inOut", duration: 0.35 },
+            0,
+          );
+      }
+
+      function sinkHalf() {
+        const title = $(".hero-title");
+        const pad = parseFloat(
+          getComputedStyle($(".hero-inner")).paddingBottom,
+        );
+        return title.offsetHeight / 2 + pad;
+      }
+
+      function setupScroll() {
+        const mm = gsap.matchMedia();
+
+        gsap.fromTo(
+          ".shot-frame",
+          { clipPath: "inset(18% 22% 18% 22% round 24px)" },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 12px)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".shot",
+              start: "top 85%",
+              end: "top 15%",
+              scrub: true,
+            },
+          },
+        );
+        gsap.fromTo(
+          ".shot-frame img",
+          { scale: 1.35 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".shot",
+              start: "top 85%",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+
+        gsap.set(".fade-up", { y: 40, opacity: 0 });
+        ScrollTrigger.batch(".fade-up", {
+          start: "top 88%",
+          onEnter: (b) =>
+            gsap.to(b, {
+              y: 0,
+              opacity: 1,
+              duration: 0.9,
+              stagger: 0.08,
+              ease: "power3.out",
+            }),
+        });
+
+        gsap.utils.toArray<HTMLElement>(".more-row").forEach((row) => {
+          gsap.from(row, {
+            "--line": 0,
+            duration: 1,
+            ease: "expo.out",
+            scrollTrigger: { trigger: row, start: "top 90%" },
+          });
+        });
+
+        mm.add("(min-width: 900px)", () => {
+          const items = gsap.utils.toArray<HTMLElement>(".media-item");
+          const cur = $(".media-cur");
+          gsap.set(items, { clipPath: "inset(100% 0 0 0)" });
+          gsap.set(items[0], { clipPath: "inset(0% 0 0 0)" });
+          let active = 0;
+          const show = (i: number) => {
+            if (i === active) return;
+            const down = i > active;
+            const next = items[i];
+            gsap.set(next, { zIndex: 2 });
+            gsap.set(items[active], { zIndex: 1 });
+            gsap.fromTo(
+              next,
+              { clipPath: down ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)" },
+              {
+                clipPath: "inset(0% 0 0% 0)",
+                duration: 0.9,
+                ease: "expo.inOut",
+              },
+            );
+            gsap.fromTo(
+              next.querySelector("img"),
+              { scale: 1.25 },
+              { scale: 1, duration: 1.2, ease: "expo.out" },
+            );
+            cur.textContent = String(i + 1).padStart(2, "0");
+            active = i;
+          };
+          gsap.utils.toArray<HTMLElement>(".feature").forEach((f, i) => {
+            ScrollTrigger.create({
+              trigger: f,
+              start: "top center",
+              end: "bottom center",
+              onToggle: (s) => s.isActive && show(i),
+            });
+          });
+        });
+
+        gsap.fromTo(
+          ".blueprint-shot img",
+          { yPercent: -8 },
+          {
+            yPercent: 8,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".blueprint-shot",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+
+        mm.add("(hover: hover)", () => {
+          document.querySelectorAll<HTMLElement>(".magnetic").forEach((btn) => {
+            const label = btn.querySelector("span");
+            const bx = gsap.quickTo(btn, "x", {
+              duration: 0.5,
+              ease: "power3",
+            });
+            const by = gsap.quickTo(btn, "y", {
+              duration: 0.5,
+              ease: "power3",
+            });
+            const lx = gsap.quickTo(label, "x", {
+              duration: 0.5,
+              ease: "power3",
+            });
+            const ly = gsap.quickTo(label, "y", {
+              duration: 0.5,
+              ease: "power3",
+            });
+            btn.addEventListener("pointermove", (e) => {
+              const r = btn.getBoundingClientRect();
+              const dx = e.clientX - (r.left + r.width / 2);
+              const dy = e.clientY - (r.top + r.height / 2);
+              bx(dx * 0.3);
+              by(dy * 0.3);
+              lx(dx * 0.15);
+              ly(dy * 0.15);
+            });
+            btn.addEventListener("pointerleave", () => {
+              bx(0);
+              by(0);
+              lx(0);
+              ly(0);
+            });
+          });
+        });
+
+        fitWords();
+        ScrollTrigger.refresh();
+      }
+    </script>
+  </body>
+</html>
