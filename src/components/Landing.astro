@@ -22,15 +22,20 @@ const tags = [
   ["Modrinth", "CurseForge"],
   ["Prism Launcher", "PolyMC", "MultiMC"],
 ];
+const featuresimg = [
+  { img: "/mod.png", w: 1042, h: 722 },
+  { img: "/modepack.png", w: 802, h: 652 },
+  { img: "/move.png", w: 802, h: 652 },
+];
 const features = t.features.map((f, i) => ({
   ...f,
   tags: tags[i],
-  img: "/sample.png",
+  ...featuresimg[i],
 }));
+const SHOT = { img: "/mainpage.png", w: 1182, h: 792 };
 const extras = t.extras;
 
 const bodyFont = lang === "zh-cn" ? "Noto+Sans+SC" : "Noto+Sans+TC";
-// hreflang 需要絕對網址，等 astro.config 設好 site 才輸出
 const site = Astro.site;
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -43,7 +48,6 @@ const pad = (n: number) => String(n).padStart(2, "0");
     <title>Nolauncher</title>
     <meta name="description" content={t.description} />
     <script is:inline define:vars={{ current: lang }}>
-      // 沒手動選過語言就依瀏覽器語言導向；選過就照選的
       (() => {
         const paths = { "zh-tw": "/", "zh-cn": "/zh-cn/", en: "/en/" };
         let want = null;
@@ -78,7 +82,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
           ),
         )
     }
-    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="preload" href={MODEL} as="fetch" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -96,7 +100,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
     <header class="nav">
       <a class="brand" href={home}>
-        <img src="/logo.svg" alt="" width="24" height="24" />
+        <img src="/icon.svg" alt="" width="24" height="24" />
         <span>Nolauncher</span>
       </a>
       <nav class="nav-links">
@@ -107,19 +111,19 @@ const pad = (n: number) => String(n).padStart(2, "0");
       <div class="nav-end">
         <nav class="lang-switch" aria-label={t.language}>
           {
-            (Object.entries(locales) as [Locale, (typeof locales)[Locale]][]).map(
-              ([key, l]) => (
-                <a
-                  href={l.path}
-                  hreflang={l.htmlLang}
-                  lang={l.htmlLang}
-                  data-lang={key}
-                  aria-current={key === lang ? "page" : undefined}
-                >
-                  {l.label}
-                </a>
-              ),
-            )
+            (
+              Object.entries(locales) as [Locale, (typeof locales)[Locale]][]
+            ).map(([key, l]) => (
+              <a
+                href={l.path}
+                hreflang={l.htmlLang}
+                lang={l.htmlLang}
+                data-lang={key}
+                aria-current={key === lang ? "page" : undefined}
+              >
+                {l.label}
+              </a>
+            ))
           }
         </nav>
         <a
@@ -158,8 +162,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
       </section>
 
       <section class="shot">
-        <div class="shot-frame">
-          <img src="/sample.png" alt={t.shotAlt} width="1600" height="1000" />
+        <div class="crop shot-frame" style={`--ratio: ${SHOT.w / SHOT.h}`}>
+          <img src={SHOT.img} alt={t.shotAlt} width={SHOT.w} height={SHOT.h} />
         </div>
       </section>
 
@@ -168,13 +172,15 @@ const pad = (n: number) => String(n).padStart(2, "0");
           {
             features.map((f, i) => (
               <div class="media-item" data-i={i}>
-                <img
-                  src={f.img}
-                  alt={f.title}
-                  width="1600"
-                  height="1000"
-                  loading="lazy"
-                />
+                <span class="crop media-crop" style={`--ratio: ${f.w / f.h}`}>
+                  <img
+                    src={f.img}
+                    alt={f.title}
+                    width={f.w}
+                    height={f.h}
+                    loading="lazy"
+                  />
+                </span>
               </div>
             ))
           }
@@ -194,14 +200,15 @@ const pad = (n: number) => String(n).padStart(2, "0");
                     <li>{t}</li>
                   ))}
                 </ul>
-                <img
-                  class="feature-inline"
-                  src={f.img}
-                  alt={f.title}
-                  width="1600"
-                  height="1000"
-                  loading="lazy"
-                />
+                <span class="crop feature-inline">
+                  <img
+                    src={f.img}
+                    alt={f.title}
+                    width={f.w}
+                    height={f.h}
+                    loading="lazy"
+                  />
+                </span>
               </article>
             ))
           }
@@ -226,12 +233,12 @@ const pad = (n: number) => String(n).padStart(2, "0");
         <h2 class="section-title">{t.blueprintTitle}</h2>
         <div class="blueprint-body">
           <p class="blueprint-lead">{t.blueprintLead}</p>
-          <div class="blueprint-shot fade-up">
+          <div class="crop blueprint-shot fade-up">
             <img
-              src="/sample.png"
+              src={SHOT.img}
               alt={t.blueprintTitle}
-              width="1600"
-              height="1000"
+              width={SHOT.w}
+              height={SHOT.h}
               loading="lazy"
             />
           </div>
@@ -249,7 +256,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
             target="_blank"
             rel="noopener"><span>{t.releases}</span></a
           >
-          <a class="btn btn-lg magnetic" href={DOCS}><span>{t.readDocs}</span></a>
+          <a class="btn btn-lg magnetic" href={DOCS}
+            ><span>{t.readDocs}</span></a
+          >
         </div>
       </div>
       <div class="footer-word" aria-hidden="true">NOLAUNCHER</div>
@@ -449,23 +458,23 @@ const pad = (n: number) => String(n).padStart(2, "0");
             clipPath: "inset(0% 0% 0% 0% round 12px)",
             ease: "none",
             scrollTrigger: {
-              trigger: ".shot",
-              start: "top 85%",
-              end: "top 15%",
+              trigger: ".shot-frame",
+              start: "top 90%",
+              end: "center center",
               scrub: true,
             },
           },
         );
         gsap.fromTo(
           ".shot-frame img",
-          { scale: 1.35 },
+          { scale: 1.2 },
           {
             scale: 1,
             ease: "none",
             scrollTrigger: {
-              trigger: ".shot",
-              start: "top 85%",
-              end: "bottom top",
+              trigger: ".shot-frame",
+              start: "top 90%",
+              end: "center center",
               scrub: true,
             },
           },
@@ -503,8 +512,14 @@ const pad = (n: number) => String(n).padStart(2, "0");
             if (i === active) return;
             const down = i > active;
             const next = items[i];
-            gsap.set(next, { zIndex: 2 });
-            gsap.set(items[active], { zIndex: 1 });
+            items.forEach((el) => gsap.killTweensOf(el));
+            // 只留目前這張墊在下面，其他的藏起來，才不會在換頁時露出別張
+            items.forEach((el, k) => {
+              if (k === i) gsap.set(el, { zIndex: 2 });
+              else if (k === active) gsap.set(el, { zIndex: 1 });
+              else gsap.set(el, { zIndex: 0, clipPath: "inset(100% 0 0 0)" });
+            });
+            const prev = items[active];
             gsap.fromTo(
               next,
               { clipPath: down ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)" },
@@ -512,6 +527,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
                 clipPath: "inset(0% 0 0% 0)",
                 duration: 0.9,
                 ease: "expo.inOut",
+                onComplete: () => {
+                  gsap.set(prev, { clipPath: "inset(100% 0 0 0)" });
+                },
               },
             );
             gsap.fromTo(
@@ -531,21 +549,6 @@ const pad = (n: number) => String(n).padStart(2, "0");
             });
           });
         });
-
-        gsap.fromTo(
-          ".blueprint-shot img",
-          { yPercent: -8 },
-          {
-            yPercent: 8,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".blueprint-shot",
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          },
-        );
 
         mm.add("(hover: hover)", () => {
           document.querySelectorAll<HTMLElement>(".magnetic").forEach((btn) => {

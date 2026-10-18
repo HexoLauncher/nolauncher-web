@@ -33,6 +33,32 @@ html.lenis body {
   overflow: hidden;
 }
 
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.crop {
+  display: block;
+  overflow: hidden;
+}
+.crop > img {
+  display: block;
+  width: calc(100% + 4px);
+  max-width: none;
+  margin: -2px;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -69,7 +95,6 @@ img {
   color: var(--faint) !important;
 }
 
-/* ---------- 載入畫面 ---------- */
 .loader {
   position: fixed;
   inset: 0;
@@ -106,7 +131,6 @@ img {
   transform: scaleX(0);
 }
 
-/* ---------- 按鈕 ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -146,7 +170,6 @@ img {
   font-size: 1.05rem;
 }
 
-/* ---------- 導覽列 ---------- */
 .nav {
   position: fixed;
   top: 0;
@@ -166,9 +189,6 @@ img {
   gap: 0.55rem;
   font-family: var(--display);
   font-weight: 700;
-}
-.brand img {
-  border-radius: 6px;
 }
 .nav-links {
   display: flex;
@@ -217,13 +237,11 @@ img {
   color: #fff;
 }
 
-/* ---------- Hero ---------- */
 .hero {
   position: relative;
   z-index: 2;
   height: 100vh;
   height: 100svh;
-  /* 大字的下半截要能超出 hero，捲離首頁後才露出來 */
   overflow: visible;
   background:
     radial-gradient(ellipse 60% 50% at 68% 45%, #231b1d 0%, transparent 70%),
@@ -284,17 +302,16 @@ img {
   white-space: nowrap;
 }
 
-/* ---------- 主畫面 ---------- */
 .shot {
-  padding: clamp(5rem, 12vw, 10rem) var(--gutter) 0;
+  padding: clamp(4rem, 8vw, 7rem) var(--gutter) 0;
 }
+
 .shot-frame {
+  max-width: min(100%, calc((100svh - 9rem) * var(--ratio)));
+  margin-inline: auto;
   overflow: hidden;
   border-radius: 12px;
   will-change: clip-path;
-}
-.shot-frame img {
-  width: 100%;
 }
 .shot-cap {
   display: flex;
@@ -305,7 +322,6 @@ img {
   color: var(--muted);
 }
 
-/* ---------- 功能 ---------- */
 .features {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
@@ -319,17 +335,23 @@ img {
   display: flex;
   align-items: center;
 }
+
 .media-item {
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   translate: 0 -50%;
-  overflow: hidden;
-  border-radius: 12px;
+  aspect-ratio: 5 / 4;
+  max-height: 80vh;
+  display: grid;
+  place-items: center;
+  container-type: size;
+  background: var(--bg);
 }
-.media-item img {
-  width: 100%;
+.media-crop {
+  width: min(100cqw, 100cqh * var(--ratio));
+  border-radius: 12px;
 }
 .media-index {
   position: absolute;
@@ -384,7 +406,6 @@ img {
   display: none;
 }
 
-/* ---------- 一般區塊 ---------- */
 .section {
   padding: clamp(6rem, 14vw, 12rem) var(--gutter) 0;
 }
@@ -394,7 +415,6 @@ img {
   margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
 }
 
-/* 其他 */
 .more-list {
   margin: 0;
   padding: 0;
@@ -446,7 +466,6 @@ img {
   font-size: 1.05rem;
 }
 
-/* 匯入 */
 .import-body {
   max-width: 62rem;
   margin-left: auto;
@@ -501,12 +520,7 @@ img {
   overflow: hidden;
   border-radius: 12px;
 }
-.blueprint-shot img {
-  width: 100%;
-  scale: 1.18;
-}
 
-/* ---------- 頁尾 ---------- */
 .footer {
   margin-top: clamp(6rem, 14vw, 12rem);
   padding: clamp(4rem, 8vw, 6rem) var(--gutter) 1.4rem;
@@ -544,7 +558,6 @@ img {
   margin-left: auto;
 }
 
-/* ---------- 響應式 ---------- */
 @media (max-width: 899px) {
   .hero-inner {
     grid-template-columns: minmax(0, 1fr);
@@ -561,7 +574,6 @@ img {
   }
   .feature-inline {
     display: block;
-    width: 100%;
     margin-top: 2rem;
     border-radius: 12px;
   }

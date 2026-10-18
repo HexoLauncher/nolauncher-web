@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<g transform="matrix(3.25,-1.625,3.25,1.625,6,17)"><rect width="8" height="8" fill="#e5343f"/></g>
+<g transform="matrix(3.25,1.625,0,3.75,6,17)"><rect width="8" height="8" fill="#e5343f"/><path transform="translate(1.5 1.5) scale(0.3125) translate(-8 -8)" fill="#fdf1f2" fill-rule="evenodd" d="M8 24V8h4.5l7 9.5V8H24v16h-4.5l-7-9.5V24z"/><rect width="8" height="8" fill="#000" opacity="0.18"/></g>
+<g transform="matrix(3.25,-1.625,0,3.75,32,30)"><rect width="8" height="8" fill="#e5343f"/><path transform="translate(1.5 1.5) scale(0.3125) translate(-8 -8)" fill="#fdf1f2" fill-rule="evenodd" d="M8 16a8 8 0 1 0 16 0a8 8 0 1 0-16 0zM12.5 16a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0z"/><rect width="8" height="8" fill="#000" opacity="0.38"/></g>
+</svg>
