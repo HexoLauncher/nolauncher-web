@@ -1,0 +1,136 @@
+---
+import "../styles/landing.css";
+import "../styles/legal.css";
+import { locales, strings, type Locale } from "../i18n/landing";
+import { legal, UPDATED, type LegalPage } from "../i18n/legal";
+
+interface Props {
+  lang: Locale;
+  page: LegalPage;
+}
+
+const { lang, page } = Astro.props;
+const t = strings[lang];
+const l = legal[lang];
+const doc = l[page];
+const home = locales[lang].path;
+
+const REPO = "https://github.com/HexoLauncher/HexoLauncher";
+const ISSUES = `${REPO}/issues`;
+
+const bodyFont = lang === "zh-cn" ? "Noto+Sans+SC" : "Noto+Sans+TC";
+const site = Astro.site;
+
+const pad = (n: number) => String(n).padStart(2, "0");
+---
+
+<html lang={locales[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{doc.title} · Nolauncher</title>
+    <meta name="description" content={doc.intro} />
+    {
+      site &&
+        Object.values(locales).map((loc) => (
+          <link
+            rel="alternate"
+            hreflang={loc.htmlLang}
+            href={new URL(`${loc.path}${page}/`, site).href}
+          />
+        ))
+    }
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href={`https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=${bodyFont}:wght@400;500;700;900&display=swap`}
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href={home}>
+        <img src="/icon.svg" alt="" width="24" height="24" />
+        <span>Nolauncher</span>
+      </a>
+      <div class="nav-end">
+        <nav class="lang-switch" aria-label={t.language}>
+          {
+            (
+              Object.entries(locales) as [Locale, (typeof locales)[Locale]][]
+            ).map(([key, loc]) => (
+              <a
+                href={`${loc.path}${page}/`}
+                hreflang={loc.htmlLang}
+                lang={loc.htmlLang}
+                data-lang={key}
+                aria-current={key === lang ? "page" : undefined}
+              >
+                {loc.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal">
+      <h1 class="legal-title">{doc.title}</h1>
+      <p class="legal-date">
+        {l.updated} <time datetime={UPDATED}>{UPDATED}</time>
+      </p>
+      <p class="legal-intro">{doc.intro}</p>
+
+      {
+        doc.sections.map((s, i) => (
+          <section class="legal-section">
+            <span class="legal-num">{pad(i + 1)}</span>
+            <div>
+              <h2>{s.title}</h2>
+              {s.body.map((p) => (
+                <p>{p}</p>
+              ))}
+              {s.list && (
+                <ul>
+                  {s.list.map((li) => (
+                    <li>{li}</li>
+                  ))}
+                </ul>
+              )}
+              {s.after?.map((p) => (
+                <p>{p}</p>
+              ))}
+              {s.issues && (
+                <p>
+                  <a href={ISSUES} target="_blank" rel="noopener">
+                    {l.issues}
+                  </a>
+                </p>
+              )}
+            </div>
+          </section>
+        ))
+      }
+    </main>
+
+    <footer class="footer legal-footer">
+      <div class="footer-meta">
+        <a href={home}>← {l.back}</a>
+        <a href={`${home}terms/`}>{t.terms}</a>
+        <a href={`${home}privacy/`}>{t.privacy}</a>
+        <span>{t.notOfficial}</span>
+      </div>
+    </footer>
+
+    <script>
+      document.querySelectorAll<HTMLElement>("[data-lang]").forEach((a) =>
+        a.addEventListener("click", () => {
+          try {
+            localStorage.setItem("lang", a.dataset.lang!);
+          } catch {}
+        }),
+      );
+    </script>
+  </body>
+</html>

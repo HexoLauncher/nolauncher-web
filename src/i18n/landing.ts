@@ -31,6 +31,8 @@ const zhTW = {
   releases: "前往 Releases",
   readDocs: "閱讀文件",
   notOfficial: "不是 Mojang 或 Microsoft 的官方產品。",
+  terms: "服務條款",
+  privacy: "隱私權聲明",
 };
 
 export type Strings = typeof zhTW;
@@ -60,6 +62,8 @@ const zhCN: Strings = {
   releases: "前往 Releases",
   readDocs: "阅读文档",
   notOfficial: "不是 Mojang 或 Microsoft 的官方产品。",
+  terms: "服务条款",
+  privacy: "隐私声明",
 };
 
 const en: Strings = {
@@ -100,6 +104,8 @@ const en: Strings = {
   releases: "Go to Releases",
   readDocs: "Read the docs",
   notOfficial: "Not an official Mojang or Microsoft product.",
+  terms: "Terms",
+  privacy: "Privacy",
 };
 
 export const strings: Record<Locale, Strings> = {

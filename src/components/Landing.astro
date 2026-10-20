@@ -33,6 +33,7 @@ const features = t.features.map((f, i) => ({
   ...featuresimg[i],
 }));
 const SHOT = { img: "/mainpage.png", w: 1182, h: 792 };
+const SHOT2 = { img: "/litematica-server.png", w: 1182, h: 792 };
 const extras = t.extras;
 
 const bodyFont = lang === "zh-cn" ? "Noto+Sans+SC" : "Noto+Sans+TC";
@@ -235,10 +236,10 @@ const pad = (n: number) => String(n).padStart(2, "0");
           <p class="blueprint-lead">{t.blueprintLead}</p>
           <div class="crop blueprint-shot fade-up">
             <img
-              src={SHOT.img}
+              src={SHOT2.img}
               alt={t.blueprintTitle}
-              width={SHOT.w}
-              height={SHOT.h}
+              width={SHOT2.w}
+              height={SHOT2.h}
               loading="lazy"
             />
           </div>
@@ -265,6 +266,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
       <div class="footer-meta">
         <span>MIT License</span>
         <a href={REPO} target="_blank" rel="noopener">GitHub</a>
+        <a href={`${home}terms/`}>{t.terms}</a>
+        <a href={`${home}privacy/`}>{t.privacy}</a>
         <span>{t.notOfficial}</span>
       </div>
     </footer>
