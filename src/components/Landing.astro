@@ -13,7 +13,21 @@ const home = locales[lang].path;
 const REPO = "https://github.com/HexoLauncher/HexoLauncher";
 const RELEASES = `${REPO}/releases/latest`;
 const DOCS = "/guides/example/";
-const VERSION = "0.1.0";
+const RELEASE_API =
+  "https://api.github.com/repos/HexoLauncher/HexoLauncher/releases/latest";
+
+
+let VERSION = "0.1.3";
+try {
+  const res = await fetch(RELEASE_API, {
+    headers: { Accept: "application/vnd.github+json" },
+    signal: AbortSignal.timeout(5000),
+  });
+  if (res.ok) {
+    const tag: string = (await res.json()).tag_name ?? "";
+    if (tag) VERSION = tag.replace(/^v/i, "");
+  }
+} catch {}
 
 const MODEL = "/models/sample.glb";
 
@@ -148,7 +162,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
                 class="btn btn-primary magnetic"
                 href={RELEASES}
                 target="_blank"
-                rel="noopener"><span>{t.download} {VERSION}</span></a
+                rel="noopener"
+                ><span>{t.download} <span data-version>{VERSION}</span></span
+                ></a
               >
               <a class="btn magnetic" href={REPO} target="_blank" rel="noopener"
                 ><span>GitHub</span></a
@@ -249,7 +265,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
     <footer class="footer">
       <div class="footer-cta">
-        <p>NoLauncher {VERSION}</p>
+        <p>NoLauncher <span data-version>{VERSION}</span></p>
         <div class="hero-cta">
           <a
             class="btn btn-primary btn-lg magnetic"
@@ -272,6 +288,18 @@ const pad = (n: number) => String(n).padStart(2, "0");
       </div>
     </footer>
 
+    <script is:inline define:vars={{ api: RELEASE_API }}>
+      fetch(api, { headers: { Accept: "application/vnd.github+json" } })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          const v = d && d.tag_name && d.tag_name.replace(/^v/i, "");
+          if (!v) return;
+          document
+            .querySelectorAll("[data-version]")
+            .forEach((el) => (el.textContent = v));
+        })
+        .catch(() => {});
+    </script>
     <script>
       import { gsap } from "gsap";
       import { ScrollTrigger } from "gsap/ScrollTrigger";
