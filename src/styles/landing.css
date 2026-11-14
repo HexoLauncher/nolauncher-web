@@ -1,23 +1,4 @@
-:root {
-  --accent: #e5343f;
-  --bg: #121011;
-  --surface: #1c1819;
-  --surface-2: #262122;
-  --line: #2f292b;
-  --ink: #efeceb;
-  --muted: #a29c9d;
-  --faint: #77716f;
-
-  --font: "Noto Sans TC", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --display: "Archivo", "Noto Sans TC", system-ui, sans-serif;
-  --gutter: clamp(16px, 3.5vw, 48px);
-
-  color-scheme: dark;
-}
-html[lang="zh-CN"] {
-  --font: "Noto Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --display: "Archivo", "Noto Sans SC", system-ui, sans-serif;
-}
+@import "./theme.css";
 
 *,
 *::before,
@@ -412,21 +393,6 @@ img {
   margin: 0 0 1.4rem;
   color: var(--muted);
   font-size: 1.05rem;
-}
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.tags li {
-  padding: 0.15rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  font-size: 0.85rem;
-  color: var(--muted);
 }
 .feature-inline {
   display: none;

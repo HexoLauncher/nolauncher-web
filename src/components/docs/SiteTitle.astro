@@ -1,0 +1,9 @@
+---
+import { locales, type Locale } from "../../i18n/landing";
+const lang: Locale = Astro.locals.starlightRoute.locale === "en" ? "en" :
+  Astro.locals.starlightRoute.locale === "zh-cn" ? "zh-cn" : "zh-tw";
+---
+<a class="docs-brand" href={locales[lang].path}>
+  <img src="/icon.svg" alt="" width="24" height="24" />
+  <span>Nolauncher</span>
+</a>

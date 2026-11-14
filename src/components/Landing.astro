@@ -12,17 +12,12 @@ const t = strings[lang];
 const home = locales[lang].path;
 
 const REPO = "https://github.com/HexoLauncher/HexoLauncher";
-const DOCS = "/guides/example/";
+const DOCS = `${home}guides/getting-started/`;
 const release = await buildRelease;
 const VERSION = release.tag_name.replace(/^v/i, "");
 
 const MODEL = "/models/sample.glb";
 
-const tags = [
-  ["Modrinth", "CurseForge"],
-  ["Modrinth", "CurseForge"],
-  ["Prism Launcher", "PolyMC", "MultiMC"],
-];
 const featuresimg = [
   { img: "/mod.png", w: 1042, h: 722 },
   { img: "/modepack.png", w: 802, h: 652 },
@@ -30,7 +25,6 @@ const featuresimg = [
 ];
 const features = t.features.map((f, i) => ({
   ...f,
-  tags: tags[i],
   ...featuresimg[i],
 }));
 const SHOT = { img: "/mainpage.png", w: 1182, h: 792 };
@@ -212,11 +206,6 @@ const pad = (n: number) => String(n).padStart(2, "0");
                 <span class="feature-num">{pad(i + 1)}</span>
                 <h2>{f.title}</h2>
                 <p>{f.body}</p>
-                <ul class="tags">
-                  {f.tags.map((t) => (
-                    <li>{t}</li>
-                  ))}
-                </ul>
                 <span class="crop feature-inline">
                   <img
                     src={f.img}

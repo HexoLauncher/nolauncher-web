@@ -1,0 +1,6 @@
+---
+import { locales, strings, type Locale } from "../../i18n/landing";
+const lang: Locale = Astro.locals.starlightRoute.locale === "en" ? "en" :
+  Astro.locals.starlightRoute.locale === "zh-cn" ? "zh-cn" : "zh-tw";
+---
+<a class="docs-download" href={locales[lang].path}>{strings[lang].download}</a>
