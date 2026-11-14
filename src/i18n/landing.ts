@@ -11,6 +11,8 @@ const zhTW = {
   nav: { features: "功能", blueprints: "藍圖", docs: "文件" },
   language: "語言",
   download: "下載",
+  otherDownloads: "其他系統與安裝檔",
+  chooseArchitecture: "請選擇適合 Mac 晶片的版本：Apple Silicon 或 Intel。",
   shotAlt: "Nolauncher 主視窗",
   features: [
     { title: "模組、資源包、光影", body: "直接在啟動器裡搜尋" },
@@ -42,6 +44,8 @@ const zhCN: Strings = {
   nav: { features: "功能", blueprints: "蓝图", docs: "文档" },
   language: "语言",
   download: "下载",
+  otherDownloads: "其他系统与安装包",
+  chooseArchitecture: "请选择适合 Mac 芯片的版本：Apple Silicon 或 Intel。",
   shotAlt: "Nolauncher 主窗口",
   features: [
     { title: "模组、资源包、光影", body: "直接在启动器里搜索" },
@@ -75,6 +79,9 @@ const en: Strings = {
   },
   language: "Language",
   download: "Download",
+  otherDownloads: "Other platforms and installers",
+  chooseArchitecture:
+    "Choose the build for your Mac chip: Apple Silicon or Intel.",
   shotAlt: "Nolauncher main window",
   features: [
     {

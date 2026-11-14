@@ -1,6 +1,7 @@
 ---
 import "../styles/landing.css";
 import { locales, strings, type Locale } from "../i18n/landing";
+import { RELEASES, assetOS, buildRelease } from "../lib/releases";
 
 interface Props {
   lang: Locale;
@@ -11,23 +12,9 @@ const t = strings[lang];
 const home = locales[lang].path;
 
 const REPO = "https://github.com/HexoLauncher/HexoLauncher";
-const RELEASES = `${REPO}/releases/latest`;
 const DOCS = "/guides/example/";
-const RELEASE_API =
-  "https://api.github.com/repos/HexoLauncher/HexoLauncher/releases/latest";
-
-
-let VERSION = "0.1.3";
-try {
-  const res = await fetch(RELEASE_API, {
-    headers: { Accept: "application/vnd.github+json" },
-    signal: AbortSignal.timeout(5000),
-  });
-  if (res.ok) {
-    const tag: string = (await res.json()).tag_name ?? "";
-    if (tag) VERSION = tag.replace(/^v/i, "");
-  }
-} catch {}
+const release = await buildRelease;
+const VERSION = release.tag_name.replace(/^v/i, "");
 
 const MODEL = "/models/sample.glb";
 
@@ -143,9 +130,10 @@ const pad = (n: number) => String(n).padStart(2, "0");
         </nav>
         <a
           class="btn btn-sm magnetic"
+          data-download
           href={RELEASES}
           target="_blank"
-          rel="noopener"><span>{t.download}</span></a
+          rel="noopener"><span>{t.download}<span data-download-os></span></span></a
         >
       </div>
     </header>
@@ -160,15 +148,27 @@ const pad = (n: number) => String(n).padStart(2, "0");
             <div class="hero-cta">
               <a
                 class="btn btn-primary magnetic"
+                data-download
                 href={RELEASES}
                 target="_blank"
                 rel="noopener"
-                ><span>{t.download} <span data-version>{VERSION}</span></span
+                ><span>{t.download} <span data-version>{VERSION}</span><span data-download-os></span></span
                 ></a
               >
               <a class="btn magnetic" href={REPO} target="_blank" rel="noopener"
                 ><span>GitHub</span></a
               >
+            </div>
+            <div class="download-info" data-downloads data-release={JSON.stringify(release)} data-choose-architecture={t.chooseArchitecture}>
+              <p class="download-filename" data-download-filename></p>
+              <details id="download-options">
+                <summary>{t.otherDownloads}</summary>
+                <ul data-download-assets>
+                  {release.assets.filter((asset) => assetOS(asset.name)).map((asset) => (
+                    <li><a href={asset.browser_download_url} target="_blank" rel="noopener">{asset.name}</a></li>
+                  ))}
+                </ul>
+              </details>
             </div>
           </div>
 
@@ -288,17 +288,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
       </div>
     </footer>
 
-    <script is:inline define:vars={{ api: RELEASE_API }}>
-      fetch(api, { headers: { Accept: "application/vnd.github+json" } })
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d) => {
-          const v = d && d.tag_name && d.tag_name.replace(/^v/i, "");
-          if (!v) return;
-          document
-            .querySelectorAll("[data-version]")
-            .forEach((el) => (el.textContent = v));
-        })
-        .catch(() => {});
+    <script>
+      import "../scripts/downloads";
     </script>
     <script>
       import { gsap } from "gsap";

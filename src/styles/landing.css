@@ -170,6 +170,32 @@ img {
   font-size: 1.05rem;
 }
 
+.download-info {
+  pointer-events: auto;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.download-filename {
+  margin: 0 0 0.35rem;
+}
+.download-filename:empty {
+  display: none;
+}
+.download-info summary {
+  cursor: pointer;
+}
+.download-info ul {
+  max-height: 12rem;
+  overflow-y: auto;
+  padding-left: 1.25rem;
+}
+.download-info a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
 .nav {
   position: fixed;
   top: 0;
