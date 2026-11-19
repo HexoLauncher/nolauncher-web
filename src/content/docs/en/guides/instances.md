@@ -27,7 +27,7 @@ Nolauncher recognizes Prism Launcher, PolyMC, MultiMC, Modrinth App, CurseForge 
 
 Linked instances cannot receive modpack updates in Nolauncher. Update through the original launcher, or import a copy instead. If an unsupported loader is reported, change it to a supported loader.
 
-![Importing instances](/move.png)
+![Importing instances](/move.webp)
 
 ## Export and restore
 

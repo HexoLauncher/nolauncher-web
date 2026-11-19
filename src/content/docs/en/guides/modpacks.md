@@ -22,7 +22,7 @@ Recognized formats include Modrinth, CurseForge, HMCL/MCBBS, ATLauncher and FTB.
 
 Archives created by Nolauncher's instance export use **Import from archive** instead. See [instances and imports](../instances/).
 
-![Modpack import](/modepack.png)
+![Modpack import](/modepack.webp)
 
 ## Manual downloads
 

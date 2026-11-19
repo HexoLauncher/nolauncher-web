@@ -22,7 +22,7 @@ FTB 與 ATLauncher 的模組包若提供可選內容，可在安裝時選擇是�
 
 Nolauncher「匯出實例」產生的壓縮檔，請改用「從壓縮檔匯入」，詳見[實例管理與匯入](../instances/)。
 
-![模組包匯入介面](/modepack.png)
+![模組包匯入介面](/modepack.webp)
 
 ## 完成手動下載
 

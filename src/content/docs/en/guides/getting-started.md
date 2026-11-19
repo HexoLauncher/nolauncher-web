@@ -27,5 +27,5 @@ The [homepage](/en/) offers the latest installer for your operating system. Use 
 2. Enter a name and select a Minecraft version and mod loader. Choose vanilla for an unmodded game.
 3. Create the instance, select it and launch.
 
-![Nolauncher main window](/mainpage.png)
+![Nolauncher main window](/mainpage.webp)
 

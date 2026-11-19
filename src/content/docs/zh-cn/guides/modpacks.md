@@ -22,7 +22,7 @@ FTB 与 ATLauncher 的整合包若提供可选内容，可在安装时选择是�
 
 Nolauncher 导出实例生成的压缩包，请改用压缩包导入，详见[实例管理与导入](../instances/)。
 
-![整合包导入界面](/modepack.png)
+![整合包导入界面](/modepack.webp)
 
 ## 完成手动下载
 

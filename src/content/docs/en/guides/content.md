@@ -15,7 +15,7 @@ The instance editor manages installed content and provides access to Modrinth an
 
 Search matches the instance's Minecraft version by default. Mods are also filtered by loader. If you disable version matching, check compatibility yourself.
 
-![Mod browser](/mod.png)
+![Mod browser](/mod.webp)
 
 ## Mod dependencies
 

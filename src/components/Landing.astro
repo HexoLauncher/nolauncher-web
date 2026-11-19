@@ -19,17 +19,23 @@ const VERSION = release.tag_name.replace(/^v/i, "");
 const MODEL = "/models/sample.glb";
 
 const featuresimg = [
-  { img: "/mod.png", w: 1042, h: 722 },
-  { img: "/modepack.png", w: 802, h: 652 },
-  { img: "/move.png", w: 802, h: 652 },
+  { img: "/mod.webp", w: 2080, h: 1380 },
+  { img: "/modepack.webp", w: 2080, h: 1380 },
+  { img: "/move.webp", w: 2080, h: 1380 },
 ];
 const features = t.features.map((f, i) => ({
   ...f,
   ...featuresimg[i],
 }));
-const SHOT = { img: "/mainpage.png", w: 1182, h: 792 };
+const SHOT = { img: "/mainpage.webp", w: 2360, h: 1520 };
 const SHOT2 = { img: "/litematica-server.png", w: 1182, h: 792 };
 const extras = t.extras;
+const tools = [
+  { img: "/tools-map.webp" },
+  { img: "/tools-slime.webp" },
+  { img: "/tools-clusters.webp" },
+].map((x, i) => ({ ...x, ...t.tools.items[i], w: 1182, h: 792 }));
+const PREVIEW = { img: "/3dpreview.webp", w: 1102, h: 752 };
 
 const bodyFont = lang === "zh-cn" ? "Noto+Sans+SC" : "Noto+Sans+TC";
 const site = Astro.site;
@@ -235,18 +241,48 @@ const pad = (n: number) => String(n).padStart(2, "0");
         </ul>
       </section>
 
+      <section id="tools" class="section tools">
+        <h2 class="section-title">{t.tools.title}</h2>
+        <p class="tools-lead">{t.tools.lead}</p>
+        <div class="tools-grid">
+          {
+            tools.map((x) => (
+              <figure class="tool fade-up">
+                <span class="crop tool-shot" >
+                  <img src={x.img} alt={x.title} width={x.w} height={x.h} loading="lazy" />
+                </span>
+                <figcaption>
+                  <h3>{x.title}</h3>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
       <section id="blueprints" class="section blueprint">
         <h2 class="section-title">{t.blueprintTitle}</h2>
         <div class="blueprint-body">
           <p class="blueprint-lead">{t.blueprintLead}</p>
-          <div class="crop blueprint-shot fade-up">
-            <img
-              src={SHOT2.img}
-              alt={t.blueprintTitle}
-              width={SHOT2.w}
-              height={SHOT2.h}
-              loading="lazy"
-            />
+          <div class="blueprint-shots">
+            <div class="crop blueprint-shot fade-up">
+              <img
+                src={SHOT2.img}
+                alt={t.blueprintTitle}
+                width={SHOT2.w}
+                height={SHOT2.h}
+                loading="lazy"
+              />
+            </div>
+            <div class="crop blueprint-shot fade-up">
+              <img
+                src={PREVIEW.img}
+                alt={t.preview3d}
+                width={PREVIEW.w}
+                height={PREVIEW.h}
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -315,11 +351,26 @@ const pad = (n: number) => String(n).padStart(2, "0");
               box.clientWidth -
               parseFloat(cs.paddingLeft) -
               parseFloat(cs.paddingRight);
-            el.style.fontSize = `${(100 * target) / el.scrollWidth}px`;
+            el.style.fontSize = `${Math.floor((100 * target * 10) / el.scrollWidth) / 10}px`;
           });
       };
       document.fonts.ready.then(fitWords);
       window.addEventListener("resize", fitWords);
+      const wordObserver = new ResizeObserver((entries) => {
+        for (const { target } of entries) {
+          const el = target as HTMLElement;
+          const box = el.parentElement!;
+          const cs = getComputedStyle(box);
+          const avail =
+            box.clientWidth -
+            parseFloat(cs.paddingLeft) -
+            parseFloat(cs.paddingRight);
+          if (Math.abs(el.scrollWidth - avail) > 1) fitWords();
+        }
+      });
+      document
+        .querySelectorAll(".hero-word, .footer-word")
+        .forEach((el) => wordObserver.observe(el));
 
       let lenis: Lenis | null = null;
       if (!reduce) {

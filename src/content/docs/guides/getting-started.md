@@ -30,5 +30,5 @@ Nolauncher 用實例管理不同的 Minecraft 版本、模組與遊戲資料。�
 2. 填寫名稱，選擇 Minecraft 版本與模組載入器；不使用模組時選原版。
 3. 確認建立後，選取實例並啟動。
 
-![Nolauncher 主視窗](/mainpage.png)
+![Nolauncher 主視窗](/mainpage.webp)
 

@@ -15,7 +15,7 @@ description: 從 Modrinth 和 CurseForge 搜尋內容並安裝到實例。
 
 搜尋預設會比對實例的 Minecraft 版本；模組還會依模組載入器篩選。若關閉版本比對，請自行確認內容相容性。
 
-![搜尋模組](/mod.png)
+![搜尋模組](/mod.webp)
 
 ## 模組相依項目
 
