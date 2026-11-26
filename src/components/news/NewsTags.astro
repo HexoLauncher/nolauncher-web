@@ -1,0 +1,21 @@
+---
+import type { NewsTag } from "../../lib/news";
+
+interface Props {
+  tags: NewsTag[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <ul class="news-tags">
+      {tags.map((t) => (
+        <li class:list={["news-tag", `news-tag-${t.kind}`]} data-tag={t.key}>
+          {t.label}
+        </li>
+      ))}
+    </ul>
+  )
+}

@@ -8,7 +8,7 @@ export type Locale = keyof typeof locales;
 
 const zhTW = {
   description: "功能強大，為專業用戶設計的 Minecraft 啟動器。",
-  nav: { features: "功能", blueprints: "藍圖", docs: "文件" },
+  nav: { features: "功能", blueprints: "藍圖", docs: "文件", news: "消息" },
   language: "語言",
   download: "下載",
   otherDownloads: "其他系統與安裝檔",
@@ -56,7 +56,7 @@ export type Strings = typeof zhTW;
 
 const zhCN: Strings = {
   description: "功能强大，为专业用户设计的 Minecraft 启动器。",
-  nav: { features: "功能", blueprints: "蓝图", docs: "文档" },
+  nav: { features: "功能", blueprints: "蓝图", docs: "文档", news: "消息" },
   language: "语言",
   download: "下载",
   otherDownloads: "其他系统与安装包",
@@ -106,6 +106,7 @@ const en: Strings = {
     features: "Features",
     blueprints: "Blueprints",
     docs: "Docs",
+    news: "News",
   },
   language: "Language",
   download: "Download",

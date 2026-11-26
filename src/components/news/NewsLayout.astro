@@ -1,0 +1,104 @@
+---
+import "../../styles/landing.css";
+import "../../styles/legal.css";
+import "../../styles/news.css";
+import { locales, strings, type Locale } from "../../i18n/landing";
+import { feedUrl } from "../../lib/news";
+import { newsStrings } from "../../i18n/news";
+
+interface Props {
+  lang: Locale;
+  title: string;
+  description: string;
+  alternates?: Partial<Record<Locale, string>>;
+}
+
+const { lang, title, description, alternates = {} } = Astro.props;
+const t = strings[lang];
+const n = newsStrings[lang];
+const home = locales[lang].path;
+const REPO = "https://github.com/HexoLauncher/HexoLauncher";
+const bodyFont = lang === "zh-cn" ? "Noto+Sans+SC" : "Noto+Sans+TC";
+const site = Astro.site;
+const hrefFor = (key: Locale) => alternates[key] ?? `${locales[key].path}news/`;
+const entries = Object.entries(locales) as [Locale, (typeof locales)[Locale]][];
+---
+
+<html lang={locales[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Nolauncher</title>
+    <meta name="description" content={description} />
+    {site &&
+      entries.map(([key, loc]) => (
+        <link
+          rel="alternate"
+          hreflang={loc.htmlLang}
+          href={new URL(hrefFor(key), site).href}
+        />
+      ))}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${n.title} · Nolauncher`}
+      href={site ? new URL(feedUrl(lang), site).href : feedUrl(lang)}
+    />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href={`https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=${bodyFont}:wght@400;500;700;900&display=swap`}
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href={home}>
+        <img src="/icon.svg" alt="" width="24" height="24" />
+        <span>Nolauncher</span>
+      </a>
+      <div class="nav-end">
+        <nav class="lang-switch" aria-label={t.language}>
+          {entries.map(([key, loc]) => (
+            <a
+              href={hrefFor(key)}
+              hreflang={loc.htmlLang}
+              lang={loc.htmlLang}
+              data-lang={key}
+              aria-current={key === lang ? "page" : undefined}
+            >
+              {loc.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal news">
+      <slot />
+    </main>
+
+    <footer class="footer legal-footer">
+      <div class="footer-meta">
+        <a href={home}>← Nolauncher</a>
+        <a href={REPO} target="_blank" rel="noopener">
+          GitHub
+        </a>
+        <a href={`${home}terms/`}>{t.terms}</a>
+        <a href={`${home}privacy/`}>{t.privacy}</a>
+        <span>{t.notOfficial}</span>
+      </div>
+    </footer>
+
+    <script>
+      document.querySelectorAll<HTMLElement>("[data-lang]").forEach((a) =>
+        a.addEventListener("click", () => {
+          try {
+            localStorage.setItem("lang", a.dataset.lang!);
+          } catch {}
+        }),
+      );
+    </script>
+  </body>
+</html>

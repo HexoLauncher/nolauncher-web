@@ -1,0 +1,40 @@
+---
+import NewsLayout from "./NewsLayout.astro";
+import NewsTags from "./NewsTags.astro";
+import type { Locale } from "../../i18n/landing";
+import { newsStrings } from "../../i18n/news";
+import { formatDate, getNews, newsUrl, tagsOf } from "../../lib/news";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const n = newsStrings[lang];
+const posts = await getNews(lang);
+---
+
+<NewsLayout lang={lang} title={n.title} description={n.lead}>
+  <h1 class="legal-title">{n.title}</h1>
+  <p class="legal-intro">{n.lead}</p>
+
+  {posts.length === 0 && <p class="news-empty">{n.empty}</p>}
+
+  <ol class="news-list">
+    {posts.map((post) => (
+      <li class="news-item">
+        <time datetime={post.data.date.toISOString()}>
+          {formatDate(post.data.date)}
+        </time>
+        <div>
+          <h2>
+            <a href={newsUrl(lang, post)}>{post.data.title}</a>
+            {post.data.draft && <span class="news-draft">draft</span>}
+          </h2>
+          <p>{post.data.description}</p>
+          <NewsTags tags={tagsOf(lang, post)} />
+        </div>
+      </li>
+    ))}
+  </ol>
+</NewsLayout>
