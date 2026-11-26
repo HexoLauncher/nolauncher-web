@@ -1,4 +1,5 @@
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
 import { locales, type Locale } from "../i18n/landing";
@@ -30,21 +31,43 @@ export async function newsPaths(lang: Locale) {
   }));
 }
 
+/** 將文章渲染成完整 HTML，並把相對網址轉為絕對網址，讓 RSS 閱讀器能正確載入圖片與連結 */
+async function renderHtml(
+  container: AstroContainer,
+  entry: NewsEntry,
+  base: URL,
+) {
+  const { Content } = await render(entry);
+  const html = await container.renderToString(Content);
+  return html.replace(
+    /\s(href|src)="(?!(?:[a-z][a-z0-9+.-]*:|#|\/\/))([^"]*)"/gi,
+    (_, attr: string, url: string) => ` ${attr}="${new URL(url, base).href}"`,
+  );
+}
+
 export async function newsFeed(lang: Locale, context: APIContext) {
   if (!context.site) throw new Error("RSS 需要在 astro.config.mjs 設定 site");
   const t = newsStrings[lang];
   const entries = await getNews(lang);
+  const container = await AstroContainer.create();
+  const site = context.site;
   return rss({
     title: `${t.title} · Nolauncher`,
     description: t.lead,
     site: context.site,
-    items: entries.map((entry) => ({
-      title: entry.data.title,
-      description: entry.data.description,
-      pubDate: entry.data.date,
-      link: newsUrl(lang, entry),
-      categories: tagsOf(lang, entry).map((t) => t.label),
-    })),
+    items: await Promise.all(
+      entries.map(async (entry) => ({
+        title: entry.data.title,
+        description: await renderHtml(
+          container,
+          entry,
+          new URL(newsUrl(lang, entry), site),
+        ),
+        pubDate: entry.data.date,
+        link: newsUrl(lang, entry),
+        categories: tagsOf(lang, entry).map((t) => t.label),
+      })),
+    ),
     customData: `<language>${locales[lang].htmlLang}</language>`,
   });
 }
